@@ -20,6 +20,10 @@ PUBLIC void	delay(int time);
 
 /* kernel.asm */
 void restart();
+PUBLIC void disp_int(int input);
 
 /* main.c */
 void TestA();
+
+/* i8259.c */
+PUBLIC void init_8259A();

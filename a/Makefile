@@ -17,8 +17,8 @@ CC		= gcc
 LD		= ld
 ASMBFLAGS	= -I boot/include/
 ASMKFLAGS	= -I include/ -f elf
-CFLAGS		= -I include/ -c -fno-builtin
-LDFLAGS		= -s -Ttext $(ENTRYPOINT)
+CFLAGS		= -I include/ -c -fno-builtin -fno-stack-protector -m32
+LDFLAGS		= -s -m elf_i386 -Ttext $(ENTRYPOINT)
 DASMFLAGS	= -u -o $(ENTRYPOINT) -e $(ENTRYOFFSET)
 
 # This Program
@@ -35,6 +35,9 @@ DASMOUTPUT	= kernel.bin.asm
 # Default starting position
 everything : $(ORANGESBOOT) $(ORANGESKERNEL)
 
+run: buildimg
+	qemu-system-i386 -drive format=raw,if=floppy,file=a.img
+
 all : realclean everything
 
 final : all clean
@@ -45,18 +48,20 @@ clean :
 	rm -f $(OBJS)
 
 realclean :
-	rm -f $(OBJS) $(ORANGESBOOT) $(ORANGESKERNEL)
+	rm -f $(OBJS) $(ORANGESBOOT) $(ORANGESKERNEL) a.img
 
 disasm :
 	$(DASM) $(DASMFLAGS) $(ORANGESKERNEL) > $(DASMOUTPUT)
 
-# We assume that "a.img" exists in current folder
-buildimg :
+a.img : a.img.gz
+	gzip -cd a.img.gz > a.img
+
+buildimg : a.img $(ORANGESBOOT) $(ORANGESKERNEL)
 	dd if=boot/boot.bin of=a.img bs=512 count=1 conv=notrunc
-	sudo mount -o loop a.img /mnt/floppy/
-	sudo cp -fv boot/loader.bin /mnt/floppy/
-	sudo cp -fv kernel.bin /mnt/floppy
-	sudo umount /mnt/floppy
+	sudo mount -o loop a.img /mnt
+	sudo cp -fv boot/loader.bin /mnt
+	sudo cp -fv kernel.bin /mnt
+	sudo umount /mnt
 
 boot/boot.bin : boot/boot.asm boot/include/load.inc boot/include/fat12hdr.inc
 	$(ASM) $(ASMBFLAGS) -o $@ $<
