@@ -17,8 +17,8 @@ CC		= gcc
 LD		= ld
 ASMBFLAGS	= -I boot/include/
 ASMKFLAGS	= -I include/ -f elf
-CFLAGS		= -I include/ -c -fno-builtin -fno-stack-protector -m32
-LDFLAGS		= -s -m elf_i386 -Ttext $(ENTRYPOINT)
+CFLAGS		= -I include/ -c -fno-builtin -fno-stack-protector -m32 -g
+LDFLAGS		= -m elf_i386 -g -Ttext $(ENTRYPOINT)
 DASMFLAGS	= -u -o $(ENTRYPOINT) -e $(ENTRYOFFSET)
 
 # This Program
@@ -37,6 +37,9 @@ everything : $(ORANGESBOOT) $(ORANGESKERNEL)
 
 run: buildimg
 	qemu-system-i386 -drive format=raw,if=floppy,file=a.img
+
+debug: buildimg
+	qemu-system-i386 -drive format=raw,if=floppy,file=a.img -s -S
 
 all : realclean everything
 
