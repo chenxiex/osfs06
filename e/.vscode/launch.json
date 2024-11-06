@@ -30,9 +30,9 @@
                     "description": "连接到 QEMU GDB 服务器",
                     "text": "target remote localhost:1234",
                     "ignoreFailures": false
-                }
-            ]
+                },
+            ],
+            "preLaunchTask": "start-qemu"
         }
-
     ]
 }

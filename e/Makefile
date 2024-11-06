@@ -16,7 +16,7 @@ DASM		= ndisasm
 CC		= gcc
 LD		= ld
 ASMBFLAGS	= -I boot/include/
-ASMKFLAGS	= -I include/ -f elf
+ASMKFLAGS	= -I include/ -f elf -g
 CFLAGS		= -I include/ -c -fno-builtin -fno-stack-protector -m32 -g -fPIC
 LDFLAGS		= -m elf_i386 -g -Ttext $(ENTRYPOINT)
 DASMFLAGS	= -u -o $(ENTRYPOINT) -e $(ENTRYOFFSET)
@@ -58,11 +58,7 @@ a.img : a.img.gz
 	gzip -cd a.img.gz > a.img
 
 buildimg : a.img $(ORANGESBOOT) $(ORANGESKERNEL)
-	dd if=boot/boot.bin of=a.img bs=512 count=1 conv=notrunc
-	sudo mount -o loop a.img /mnt
-	sudo cp -fv boot/loader.bin /mnt
-	sudo cp -fv kernel.bin /mnt
-	sudo umount /mnt
+	scripts/buildimg.sh
 
 boot/boot.bin : boot/boot.asm boot/include/load.inc boot/include/fat12hdr.inc
 	$(ASM) $(ASMBFLAGS) -o $@ $<
