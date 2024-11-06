@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "make buildimg",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "start-qemu",
+            "type": "shell",
+            "command": "echo 'started' && qemu-system-i386 -drive format=raw,if=floppy,file=a.img -s -S",
+            "isBackground": true,
+            "dependsOn": "make",
+            "problemMatcher": [
+                {
+                    "owner": "custom",
+                    "pattern": [
+                        {
+                            "regexp": ".",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "started",
+                        "endsPattern": "started"
+                    }
+                }
+            ]
+        }
+    ]
+}
