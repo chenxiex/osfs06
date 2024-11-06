@@ -1,0 +1,12 @@
+{
+    "nasm.extraFlags": [
+        "-I include/"
+    ],
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/include",
+        "-I${workspaceFolder}",
+        "-I${fileDirname}/include"
+    ],
+    "nasm.outputFormat": "elf32",
+    "debug.allowBreakpointsEverywhere": true
+}
