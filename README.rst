@@ -97,6 +97,6 @@ Here are three processes A, B, C with priorities 15, 5, 3 (bigger number implies
 
 `‹prev`_   `next›`_
 
-.. _`Step 03`: https://github.com/yyu/osfs03
-.. _`‹prev`: https://github.com/yyu/osfs05
-.. _`next›`: https://github.com/yyu/osfs07
+.. _`Step 03`: https://github.com/chenxiex/osfs03
+.. _`‹prev`: https://github.com/chenxiex/osfs05
+.. _`next›`: https://github.com/chenxiex/osfs07
