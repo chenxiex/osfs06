@@ -21,6 +21,7 @@ PUBLIC u32	seg2phys(u16 seg);
 /* klib.c */
 PUBLIC void	delay(int time);
 PUBLIC void disp_int(int input);
+PUBLIC int calculate_checksum(u32 base, u32 size);
 
 /* kernel.asm */
 void restart();

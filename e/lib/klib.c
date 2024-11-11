@@ -67,9 +67,20 @@ PUBLIC void delay(int time)
 {
 	int i, j, k;
 	for(k=0;k<time;k++){
-		/*for(i=0;i<10000;i++){	for Virtual PC	*/
-		for(i=0;i<10;i++){/*	for Bochs	*/
+		for(i=0;i<10000;i++){/*	for Virtual PC	*/
+		/*for(i=0;i<10;i++){	for Bochs	*/
 			for(j=0;j<10000;j++){}
 		}
 	}
+}
+
+/*======================================================================*
+							   calculate_checksum
+ *======================================================================*/
+PUBLIC int calculate_checksum(u32 base, u32 size) {
+	int checksum = 0;
+	for (u32 i = 0; i < size; i++) {
+		checksum += *((u8 *)(base+i));
+	}
+	return checksum;
 }

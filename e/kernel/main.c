@@ -1,4 +1,3 @@
-
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                             main.c
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -34,28 +33,37 @@ PUBLIC int kernel_main()
 
 		memcpy(&p_proc->ldts[0], &gdt[SELECTOR_KERNEL_CS >> 3],
 		       sizeof(DESCRIPTOR));
-		p_proc->ldts[0].attr1 = DA_C | PRIVILEGE_TASK << 5;
+		p_proc->ldts[0].attr1 = DA_C | PRIVILEGE_USER << 5;
 		memcpy(&p_proc->ldts[1], &gdt[SELECTOR_KERNEL_DS >> 3],
 		       sizeof(DESCRIPTOR));
-		p_proc->ldts[1].attr1 = DA_DRW | PRIVILEGE_TASK << 5;
+		p_proc->ldts[1].attr1 = DA_DRW | PRIVILEGE_USER << 5;
 		p_proc->regs.cs	= ((8 * 0) & SA_RPL_MASK & SA_TI_MASK)
-			| SA_TIL | RPL_TASK;
+			| SA_TIL | RPL_USER;
 		p_proc->regs.ds	= ((8 * 1) & SA_RPL_MASK & SA_TI_MASK)
-			| SA_TIL | RPL_TASK;
+			| SA_TIL | RPL_USER;
 		p_proc->regs.es	= ((8 * 1) & SA_RPL_MASK & SA_TI_MASK)
-			| SA_TIL | RPL_TASK;
+			| SA_TIL | RPL_USER;
 		p_proc->regs.fs	= ((8 * 1) & SA_RPL_MASK & SA_TI_MASK)
-			| SA_TIL | RPL_TASK;
+			| SA_TIL | RPL_USER;
 		p_proc->regs.ss	= ((8 * 1) & SA_RPL_MASK & SA_TI_MASK)
-			| SA_TIL | RPL_TASK;
+			| SA_TIL | RPL_USER;
 		p_proc->regs.gs	= (SELECTOR_KERNEL_GS & SA_RPL_MASK)
-			| RPL_TASK;
+			| RPL_USER;
 
 		p_proc->regs.eip = (u32)p_task->initial_eip;
 		p_proc->regs.esp = (u32)p_task_stack;
 		p_proc->regs.eflags = 0x1202; /* IF=1, IOPL=1 */
 
 		p_task_stack -= p_task->stacksize;
+		p_proc->p_task_stack = p_task_stack;
+
+		u32 code_base=(u32)p_task->initial_eip;
+		u32 code_limit=(u32)CS_SIZE;
+		u32 data_base=(u32)(p_task_stack);
+		u32 data_limit=(u32)(p_task->stacksize);
+		p_proc->code_segment_checksum = calculate_checksum(code_base, code_limit);
+		p_proc->data_segment_checksum = calculate_checksum(data_base, data_limit);
+
 		p_proc++;
 		p_task++;
 		selector_ldt += 1 << 3;
@@ -77,8 +85,6 @@ void TestA()
 	int i = 0;
 	while(1){
 		disp_str("A");
-		disp_int(i++);
-		disp_str(".");
 		delay(1);
 	}
 }
@@ -91,8 +97,6 @@ void TestB()
 	int i = 0x1000;
 	while(1){
 		disp_str("B");
-		disp_int(i++);
-		disp_str(".");
 		delay(1);
 	}
 }

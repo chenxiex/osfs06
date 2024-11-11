@@ -1,10 +1,10 @@
-
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                                proc.h
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                                                     Forrest Yu, 2005
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
+#include "type.h"
+#include "protect.h"
 
 typedef struct s_stackframe {	/* proc_ptr points here				↑ Low			*/
 	u32	gs;		/* ┓						│			*/
@@ -36,6 +36,9 @@ typedef struct s_proc {
 								/* 2 is LDT_SIZE - avoid include protect.h */
 	u32				pid;			/* process id passed in from MM */
 	char				p_name[16];		/* name of the process */
+	int				code_segment_checksum; /* 校验和 */
+	int				data_segment_checksum; /* 校验和 */
+	char* p_task_stack;
 }PROCESS;
 
 

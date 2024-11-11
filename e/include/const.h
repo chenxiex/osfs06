@@ -39,5 +39,7 @@
 #define	INT_S_CTL	0xA0	/* I/O port for second interrupt controller  <Slave>  */
 #define	INT_S_CTLMASK	0xA1	/* setting bits in this port disables ints   <Slave>  */
 
+/* 段相关常数 */
+#define CS_SIZE 100
 
 #endif /* _ORANGES_CONST_H_ */
